@@ -1,4 +1,4 @@
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 function root(...args) {
@@ -6,32 +6,39 @@ function root(...args) {
 }
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: './src/index.ts',
   output: {
-    path: root("dist"),
-    filename: "index.js",
+    path: root('dist'),
+    filename: 'index.js',
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        loader: "ts-loader"
+        test: /\.ts$/,
+        loader: 'ts-loader'
       },
       {
         test: /\.scss$/,
         use: [
-          "style-loader",
-          "css-loader",
-          "sass-loader",
+          'style-loader',
+          'css-loader',
+          'sass-loader',
         ],
       }
     ],
   },
   resolve: {
-    extensions: [".js", ".ts", ".tsx"]
+    extensions: ['.js', '.ts']
   },
-  mode: "development",
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: root('assets'),
+  },
+  mode: 'development',
   plugins: [
-    new CopyWebpackPlugin(['src/index.html'])
+    new CopyWebpackPlugin([
+      { from: 'src/index.html', to: 'index.html', toType: 'file' },
+      { from: 'assets/images', to: 'images', toType: 'dir' },
+    ]),
   ],
 };
