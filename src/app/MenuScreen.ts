@@ -7,19 +7,22 @@ import {
 } from './consts';
 
 export default class MenuScreen extends Container {
-  private _button: Button;
-
   constructor() {
     super();
-    this._button = new Button({
-      x: SCENE_WIDTH / 2,
-      y: SCENE_HEIGHT / 2,
-      caption: 'Start Game',
+    const titleButton = new Button({
+      x: SCENE_WIDTH * 0.5,
+      y: SCENE_HEIGHT * 0.45,
+      caption: 'Exit to menu',
     });
-    this.addChild(this._button);
-  }
+    titleButton.on('pointerup', () => this.emit('tomenu'));
+    this.addChild(titleButton);
 
-  public onStartGame(cb: () => void) {
-    this._button.on('pointerup', cb);
+    const resumeButton = new Button({
+      x: SCENE_WIDTH * 0.5,
+      y: SCENE_HEIGHT * 0.55,
+      caption: 'Continue game',
+    });
+    resumeButton.on('pointerup', () => this.emit('resume'));
+    this.addChild(resumeButton);
   }
 }

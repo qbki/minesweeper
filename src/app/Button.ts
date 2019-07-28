@@ -24,7 +24,7 @@ export default class Button extends Container {
 
     const style = new TextStyle({
       ...TEXT_STYLE,
-      dropShadowDistance: 6,
+      dropShadowDistance: 4,
       ...props.style,
     });
     this._text = new Text(props.caption, style);
@@ -46,12 +46,12 @@ export default class Button extends Container {
 
   private onButtonOver = () => {
     this._text.style.fill = ['#ffffff', '#ff0099'];
-    this._text.style.dropShadowDistance = 6;
+    this._text.style.dropShadowDistance = 4;
   }
 
   private onButtonOut = () => {
     this._text.style.fill = ['#ffffff', '#00ff99'];
-    this._text.style.dropShadowDistance = 6;
+    this._text.style.dropShadowDistance = 4;
   }
 
   private onButtonDown = () => {

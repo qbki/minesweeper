@@ -32,16 +32,27 @@ export default class MenuScreen extends Container {
 
   constructor(texture: Texture) {
     super();
+    const textOffset = 10;
 
-    const button = new Button({
+    const restartButton = new Button({
       x: TILE_OFFSET_X + GAME_FIELD_WIDTH,
-      y: TILE_OFFSET_Y + 3,
+      y: TILE_OFFSET_Y - textOffset,
       caption: 'Restart',
       anchor: new Point(1, 1),
       style: { fontSize: 24 },
     });
-    button.on('pointerdown', this.onRestart);
-    this.addChild(button);
+    restartButton.on('pointerup', this.onRestart);
+    this.addChild(restartButton);
+
+    const menuButton = new Button({
+      x: TILE_OFFSET_X + GAME_FIELD_WIDTH,
+      y: TILE_OFFSET_Y + GAME_FIELD_HEIGHT + textOffset,
+      caption: 'Pause',
+      anchor: new Point(1, 0),
+      style: { fontSize: 24 },
+    });
+    menuButton.on('pointerup', () => this.emit('menu'));
+    this.addChild(menuButton);
 
     this._infoText = new Text(
       '',
@@ -51,7 +62,7 @@ export default class MenuScreen extends Container {
       },
     );
     this._infoText.anchor.set(0, 1);
-    this._infoText.position.set(TILE_OFFSET_X, TILE_OFFSET_Y);
+    this._infoText.position.set(TILE_OFFSET_X, TILE_OFFSET_Y - textOffset);
     this.addChild(this._infoText);
     this.setInfoText(0);
 
@@ -63,7 +74,7 @@ export default class MenuScreen extends Container {
       },
     );
     this._resultText.anchor.set(0.5, 1);
-    this._resultText.position.set(SCENE_WIDTH / 2, TILE_OFFSET_Y);
+    this._resultText.position.set(SCENE_WIDTH * 0.5, TILE_OFFSET_Y - textOffset);
     this.addChild(this._resultText);
 
     const cellsContainer = new Container();
@@ -86,6 +97,10 @@ export default class MenuScreen extends Container {
     for (const row of this._map) {
       window.console.log(...row.map(c => c.hasBomb() ? '💣' : '∅'));
     }
+  }
+
+  public restart() {
+    this.onRestart();
   }
 
   private onPointerDown = (event: interaction.InteractionEvent) => {

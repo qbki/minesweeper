@@ -1,5 +1,6 @@
 import {
   Application,
+  filters,
   interaction,
   Loader,
   Texture,
@@ -10,8 +11,8 @@ import isEqual from 'lodash/isEqual';
 
 import CellSprite, { CellType } from './CellSprite';
 import GameScreen from './GameScreen';
+import TitleScreen from './TitleScreen';
 import MenuScreen from './MenuScreen';
-import ResultScreen from './ResultScreen';
 import {
   SCENE_HEIGHT,
   SCENE_WIDTH,
@@ -45,15 +46,39 @@ export default class App {
 
   private onLoadResources = (_: unknown, res: {[key: string]: { texture: Texture }}) => {
     const game = new GameScreen(res.spritesheet.texture);
+    const title = new TitleScreen();
+    const menu = new MenuScreen();
+    const blurFilter = new filters.BlurFilter();
+
     game.visible = true;
+    game.on('menu', () => {
+      game.interactiveChildren = false;
+      game.filters = [blurFilter];
+      menu.visible = true;
+    });
     this._app.stage.addChild(game);
 
-    // const menu = new MenuScreen();
-    // menu.onStartGame(() => {
-      // menu.visible = false;
-      // game.visible = true;
-    // });
-    // this._app.stage.addChild(menu);
-    //
+    title.visible = false;
+    title.on('start', () => {
+      title.visible = false;
+      game.visible = true;
+    });
+    this._app.stage.addChild(title);
+
+    menu.visible = false;
+    menu.on('tomenu', () => {
+      game.filters = [];
+      menu.visible = false;
+      game.visible = false;
+      game.restart();
+      game.interactiveChildren = true;
+      title.visible = true;
+    });
+    menu.on('resume', () => {
+      game.filters = [];
+      menu.visible = false;
+      game.interactiveChildren = true;
+    });
+    this._app.stage.addChild(menu);
   }
 }
