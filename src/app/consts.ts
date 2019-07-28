@@ -1,6 +1,6 @@
 export const SCENE_WIDTH = 800;
 export const SCENE_HEIGHT = 600;
-export const BOMBS_AMOUNT = 20;
+export const BOMBS_AMOUNT = 30;
 export const TEXTURE_TILE_WIDTH = 128;
 export const TEXTURE_TILE_HEIGHT = 128;
 export const MAP_WIDTH = 20;

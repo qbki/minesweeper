@@ -9,7 +9,6 @@ import {
   TilingSprite,
 } from 'pixi.js';
 import noop from 'lodash/noop';
-import isEqual from 'lodash/isEqual';
 
 import CellSprite, { CellType } from './CellSprite';
 import Button from './Button';
@@ -252,7 +251,7 @@ export default class MenuScreen extends Container {
     const len = visitedCells.length;
     for (let i = 0; i < len; i += 1) {
       const pos = cell.tilePos();
-      if (isEqual(visitedCells[i], pos)) {
+      if (visitedCells[i].x === pos.x && visitedCells[i].y === pos.y) {
         return;
       }
     }
@@ -314,7 +313,11 @@ export default class MenuScreen extends Container {
       const x = Math.floor(Math.random() * MAP_WIDTH);
       const y = Math.floor(Math.random() * MAP_HEIGHT);
       const cell = this._map[y][x];
-      if (cell.hasBomb() || isEqual(cell.tilePos(), excludedPos)) {
+      const cellTilePos = cell.tilePos();
+      if (
+        cell.hasBomb() ||
+        (cellTilePos.x === excludedPos.x && cellTilePos.y === excludedPos.y)
+      ) {
         let processedCell = cell;
         while (true) {
           const { x: tileX, y: tileY } = processedCell.tilePos();
