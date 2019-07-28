@@ -4,7 +4,7 @@ import {
   Point,
   Text,
   TextStyle,
-} from 'pixi.js';
+} from 'pixi.js-legacy';
 
 import { TEXT_STYLE } from './consts';
 

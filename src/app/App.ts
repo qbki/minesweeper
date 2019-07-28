@@ -5,7 +5,7 @@ import {
   Loader,
   Texture,
   TilingSprite,
-} from 'pixi.js';
+} from 'pixi.js-legacy';
 import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 

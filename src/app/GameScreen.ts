@@ -7,7 +7,7 @@ import {
   Text,
   Texture,
   TilingSprite,
-} from 'pixi.js';
+} from 'pixi.js-legacy';
 import noop from 'lodash/noop';
 
 import CellSprite, { CellType } from './CellSprite';
