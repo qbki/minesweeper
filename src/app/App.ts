@@ -33,7 +33,7 @@ export default class App {
     domRoot.addEventListener('contextmenu', e => e.preventDefault());
     this._loader = new Loader();
     this._loader
-      .add('spritesheet', '/images/spritesheet.png')
+      .add('spritesheet', 'images/spritesheet.png')
       .load(this.onLoadResources);
     this._map = [[]];
   }
