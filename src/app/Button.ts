@@ -1,14 +1,19 @@
 import {
   Container,
   Graphics,
+  Point,
   Text,
   TextStyle,
 } from 'pixi.js';
+
+import { TEXT_STYLE } from './consts';
 
 interface ButtonProps {
   x: number;
   y: number;
   caption: string;
+  anchor?: Point;
+  style?: Partial<TextStyle>;
 }
 
 export default class Button extends Container {
@@ -18,21 +23,13 @@ export default class Button extends Container {
     super();
 
     const style = new TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff99'],
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
+      ...TEXT_STYLE,
       dropShadowDistance: 6,
+      ...props.style,
     });
     this._text = new Text(props.caption, style);
     this._text.position.set(props.x, props.y);
-    this._text.anchor.set(0.5, 0.5);
+    this._text.anchor = props.anchor || new Point(0.5, 0.5);
     this.addChild(this._text);
 
     this.interactive = true;
@@ -41,6 +38,10 @@ export default class Button extends Container {
     this.on('pointerout', this.onButtonOut);
     this.on('pointerdown', this.onButtonDown);
     this.on('pointerup', this.onButtonOver);
+  }
+
+  public setText(text: string) {
+    this._text.text = text;
   }
 
   private onButtonOver = () => {

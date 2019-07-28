@@ -11,6 +11,7 @@ import isEqual from 'lodash/isEqual';
 import CellSprite, { CellType } from './CellSprite';
 import GameScreen from './GameScreen';
 import MenuScreen from './MenuScreen';
+import ResultScreen from './ResultScreen';
 import {
   SCENE_HEIGHT,
   SCENE_WIDTH,
@@ -43,16 +44,16 @@ export default class App {
   }
 
   private onLoadResources = (_: unknown, res: {[key: string]: { texture: Texture }}) => {
-    const game = new GameScreen();
-    game.init(res.spritesheet.texture);
-    game.visible = false;
+    const game = new GameScreen(res.spritesheet.texture);
+    game.visible = true;
     this._app.stage.addChild(game);
 
-    const menu = new MenuScreen();
-    menu.onStartGame(() => {
-      menu.visible = false;
-      game.visible = true;
-    });
-    this._app.stage.addChild(menu);
+    // const menu = new MenuScreen();
+    // menu.onStartGame(() => {
+      // menu.visible = false;
+      // game.visible = true;
+    // });
+    // this._app.stage.addChild(menu);
+    //
   }
 }

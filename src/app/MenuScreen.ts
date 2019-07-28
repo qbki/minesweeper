@@ -1,10 +1,10 @@
 import { Container } from 'pixi.js';
+
+import Button from './Button';
 import {
   SCENE_HEIGHT,
   SCENE_WIDTH,
 } from './consts';
-
-import Button from './Button';
 
 export default class MenuScreen extends Container {
   private _button: Button;

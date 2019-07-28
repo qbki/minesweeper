@@ -5,10 +5,14 @@ import {
 } from 'pixi.js';
 import noop from 'lodash/noop';
 
-const TEXTURE_TILE_WIDTH = 128;
-const TEXTURE_TILE_HEIGHT = 128;
-const TILE_WIDTH = 32;
-const TILE_HEIGHT = 32;
+import {
+  TEXTURE_TILE_HEIGHT,
+  TEXTURE_TILE_WIDTH,
+  TILE_HEIGHT,
+  TILE_OFFSET_X,
+  TILE_OFFSET_Y,
+  TILE_WIDTH,
+} from './consts';
 
 export enum CellType {
   bomb = 'bomb',
@@ -29,7 +33,10 @@ export enum CellType {
 
 export default class CellSprite extends TilingSprite {
   public static coordToCellPos(coord: Point) {
-    return new Point(Math.floor(coord.x / TILE_WIDTH), Math.floor(coord.y / TILE_HEIGHT));
+    return new Point(
+      Math.floor((coord.x - TILE_OFFSET_X) / TILE_WIDTH),
+      Math.floor((coord.y - TILE_OFFSET_Y) / TILE_HEIGHT),
+    );
   }
 
   private _cellType!: CellType;
@@ -43,7 +50,10 @@ export default class CellSprite extends TilingSprite {
   }
 
   public placeOnMap(x: number, y: number) {
-    this.position.set(x * TILE_WIDTH, y * TILE_HEIGHT);
+    this.position.set(
+      x * TILE_WIDTH + TILE_OFFSET_X,
+      y * TILE_HEIGHT + TILE_OFFSET_Y,
+    );
   }
 
   public type(cellType?: CellType) {

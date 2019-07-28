@@ -1,7 +1,10 @@
 import {
   Application,
+  Container,
   interaction,
   Loader,
+  Point,
+  Text,
   Texture,
   TilingSprite,
 } from 'pixi.js';
@@ -9,35 +12,79 @@ import noop from 'lodash/noop';
 import isEqual from 'lodash/isEqual';
 
 import CellSprite, { CellType } from './CellSprite';
-import { Container } from 'pixi.js';
-
-const MAP_WIDTH = 20;
-const MAP_HEIGHT = 10;
+import Button from './Button';
+import {
+  BOMBS_AMOUNT,
+  GAME_FIELD_HEIGHT,
+  GAME_FIELD_WIDTH,
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  SCENE_WIDTH,
+  TEXT_STYLE,
+  TILE_OFFSET_X,
+  TILE_OFFSET_Y,
+} from './consts';
 
 export default class MenuScreen extends Container {
   private _map: CellSprite[][];
+  private _infoText: Text;
+  private _resultText: Text;
 
-  constructor() {
+  constructor(texture: Texture) {
     super();
-    this.interactive = true;
-    this.on('pointerdown', this.onPointerDown);
-    this._map = [[]];
-  }
 
-  public init(texture: Texture) {
+    const button = new Button({
+      x: TILE_OFFSET_X + GAME_FIELD_WIDTH,
+      y: TILE_OFFSET_Y + 3,
+      caption: 'Restart',
+      anchor: new Point(1, 1),
+      style: { fontSize: 24 },
+    });
+    button.on('pointerdown', this.onRestart);
+    this.addChild(button);
+
+    this._infoText = new Text(
+      '',
+      {
+        ...TEXT_STYLE,
+        fontSize: 24,
+      },
+    );
+    this._infoText.anchor.set(0, 1);
+    this._infoText.position.set(TILE_OFFSET_X, TILE_OFFSET_Y);
+    this.addChild(this._infoText);
+    this.setInfoText(0);
+
+    this._resultText = new Text(
+      '',
+      {
+        ...TEXT_STYLE,
+        fontSize: 36,
+      },
+    );
+    this._resultText.anchor.set(0.5, 1);
+    this._resultText.position.set(SCENE_WIDTH / 2, TILE_OFFSET_Y);
+    this.addChild(this._resultText);
+
+    const cellsContainer = new Container();
+    cellsContainer.name = 'cells';
+    cellsContainer.on('pointerdown', this.onPointerDown);
+    cellsContainer.interactive = true;
+    this.addChild(cellsContainer);
+
     this._map = [];
     for (let y = 0; y < MAP_HEIGHT; y += 1) {
+      this._map.push([]);
       for (let x = 0; x < MAP_WIDTH; x += 1) {
-        this._map.push([]);
         const cell = new CellSprite(texture);
         cell.placeOnMap(x, y);
         cell.hasBomb(Math.random() >= 0.9);
         this._map[y].push(cell);
-        this.addChild(cell);
+        cellsContainer.addChild(cell);
       }
     }
     for (const row of this._map) {
-      console.log(...row.map(c => c.hasBomb() ? '💣' : '∅'));
+      window.console.log(...row.map(c => c.hasBomb() ? '💣' : '∅'));
     }
   }
 
@@ -49,6 +96,17 @@ export default class MenuScreen extends Container {
     } else {
       this.handleAltClick(cell);
     }
+  }
+
+  private onRestart = () => {
+    for (let y = 0; y < MAP_HEIGHT; y += 1) {
+      for (let x = 0; x < MAP_WIDTH; x += 1) {
+        const cell = this._map[y][x];
+        cell.type(CellType.closed);
+      }
+    }
+    this.setInfoText(0);
+    this._resultText.text = '';
   }
 
   private handleClick(cell: CellSprite) {
@@ -104,14 +162,18 @@ export default class MenuScreen extends Container {
       this.openMap();
       this.handleWinning();
     }
+    const flagsAmount = this.calcFlagsAmount();
+    this.setInfoText(flagsAmount);
   }
 
   private handleWinning() {
-    console.log('You are awesome!');
+    this._resultText.text = 'You are awesome!';
+    this._resultText.style.fill = ['#ffffff', '#00ff66'];
   }
 
   private handleLosing() {
-    console.log('Next time...');
+    this._resultText.text = 'Game Over';
+    this._resultText.style.fill = ['#ffffff', '#ff0066'];
   }
 
   private openMap() {
@@ -150,6 +212,18 @@ export default class MenuScreen extends Container {
     return true;
   }
 
+  private setInfoText(flagsAmount: number) {
+    const bombsAmount = BOMBS_AMOUNT - flagsAmount;
+    this._infoText.text = `💣  ${bombsAmount}`;
+    if (bombsAmount > 0) {
+      this._infoText.style.fill = ['#ffffff', '#ffff00'];
+    } else if (bombsAmount < 0) {
+      this._infoText.style.fill = ['#ffffff', '#ff0000'];
+    } else {
+      this._infoText.style.fill = ['#ffffff', '#00ff99'];
+    }
+  }
+
   private openSaveArea = (
     cell: CellSprite,
     visitedCells: Array<{ x: number, y: number }> = [],
@@ -176,6 +250,19 @@ export default class MenuScreen extends Container {
       }
     });
     return amount;
+  }
+
+  private calcFlagsAmount = () => {
+    let flagsAmount = 0;
+    for (let y = 0; y < MAP_HEIGHT; y += 1) {
+      for (let x = 0; x < MAP_WIDTH; x += 1) {
+        const cell = this._map[y][x];
+        if (cell.is(CellType.flag)) {
+          flagsAmount += 1;
+        }
+      }
+    }
+    return flagsAmount;
   }
 
   private walkAroundCell = (cell: CellSprite, cb: (c: CellSprite) => void) => {
