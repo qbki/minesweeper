@@ -4,11 +4,23 @@
   "main": "src/index.js",
   "scripts": {
     "build": "rm -rf ./dist && webpack --config webpack.config.js",
-    "start": "webpack-dev-server --hot --inline"
+    "start": "webpack-dev-server --hot --inline --host 0.0.0.0"
   },
+  "browserslist": [
+    "last 2 version",
+    "ie 11"
+  ],
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@types/classnames": "^2.2.7",
     "@types/lodash": "^4.14.133",
+    "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^2.1.1",
     "node-sass": "^4.12.0",
@@ -22,6 +34,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "core-js": "^3.1.4",
     "lodash-es": "^4.17.11",
     "pixi.js": "^5.1.0"
   }
