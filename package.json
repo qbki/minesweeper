@@ -1,6 +1,7 @@
 {
   "name": "minesweeper",
   "version": "0.0.1",
+  "license": "MIT",
   "main": "src/index.js",
   "scripts": {
     "build": "rm -rf ./dist && webpack -p",
