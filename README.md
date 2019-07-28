@@ -8,6 +8,8 @@
 
 [Link to Wikipedia](https://en.wikipedia.org/wiki/Minesweeper_(video_game))
 
+[Link to Online Demo](https://graydrago.github.io/examples/minesweeper/index.html)
+
 ## Manual
 
 `Left mouse button click on cell` opens it
