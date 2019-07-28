@@ -50,20 +50,20 @@ export default class App {
     const menu = new MenuScreen();
     const blurFilter = new filters.BlurFilter();
 
-    game.visible = true;
+    title.visible = true;
+    title.on('start', () => {
+      title.visible = false;
+      game.visible = true;
+    });
+    this._app.stage.addChild(title);
+
+    game.visible = false;
     game.on('menu', () => {
       game.interactiveChildren = false;
       game.filters = [blurFilter];
       menu.visible = true;
     });
     this._app.stage.addChild(game);
-
-    title.visible = false;
-    title.on('start', () => {
-      title.visible = false;
-      game.visible = true;
-    });
-    this._app.stage.addChild(title);
 
     menu.visible = false;
     menu.on('tomenu', () => {

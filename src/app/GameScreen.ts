@@ -122,6 +122,7 @@ export default class MenuScreen extends Container {
     }
     this.setInfoText(0);
     this._resultText.text = '';
+    this.getChildByName('cells').interactive = true;
   }
 
   private handleClick(cell: CellSprite) {
@@ -184,11 +185,13 @@ export default class MenuScreen extends Container {
   private handleWinning() {
     this._resultText.text = 'You are awesome!';
     this._resultText.style.fill = ['#ffffff', '#00ff66'];
+    this.getChildByName('cells').interactive = false;
   }
 
   private handleLosing() {
     this._resultText.text = 'Game Over';
     this._resultText.style.fill = ['#ffffff', '#ff0066'];
+    this.getChildByName('cells').interactive = false;
   }
 
   private openMap() {
