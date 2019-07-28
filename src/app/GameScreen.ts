@@ -14,6 +14,7 @@ import isEqual from 'lodash/isEqual';
 import CellSprite, { CellType } from './CellSprite';
 import Button from './Button';
 import {
+  BOMB_PLACEMENT_STEP,
   BOMBS_AMOUNT,
   GAME_FIELD_HEIGHT,
   GAME_FIELD_WIDTH,
@@ -26,7 +27,8 @@ import {
 } from './consts';
 
 export default class MenuScreen extends Container {
-  private _map: CellSprite[][];
+  private _bombsWerePlaced: boolean = false;
+  private _map: CellSprite[][] = [];
   private _infoText: Text;
   private _resultText: Text;
 
@@ -83,19 +85,14 @@ export default class MenuScreen extends Container {
     cellsContainer.interactive = true;
     this.addChild(cellsContainer);
 
-    this._map = [];
     for (let y = 0; y < MAP_HEIGHT; y += 1) {
       this._map.push([]);
       for (let x = 0; x < MAP_WIDTH; x += 1) {
         const cell = new CellSprite(texture);
         cell.placeOnMap(x, y);
-        cell.hasBomb(Math.random() >= 0.9);
         this._map[y].push(cell);
         cellsContainer.addChild(cell);
       }
-    }
-    for (const row of this._map) {
-      window.console.log(...row.map(c => c.hasBomb() ? '💣' : '∅'));
     }
   }
 
@@ -106,6 +103,10 @@ export default class MenuScreen extends Container {
   private onPointerDown = (event: interaction.InteractionEvent) => {
     const pos = CellSprite.coordToCellPos(event.data.getLocalPosition(this));
     const cell = this._map[pos.y][pos.x];
+    if (!this._bombsWerePlaced) {
+      this.placeBombs(cell);
+      this._bombsWerePlaced = true;
+    }
     if (event.data.button === 0) {
       this.handleClick(cell);
     } else {
@@ -118,10 +119,12 @@ export default class MenuScreen extends Container {
       for (let x = 0; x < MAP_WIDTH; x += 1) {
         const cell = this._map[y][x];
         cell.type(CellType.closed);
+        cell.hasBomb(false);
       }
     }
     this.setInfoText(0);
     this._resultText.text = '';
+    this._bombsWerePlaced = false;
     this.getChildByName('cells').interactive = true;
   }
 
@@ -303,5 +306,34 @@ export default class MenuScreen extends Container {
     const amount = this.calcBombsAmountAroundCell(cell);
     cell.type((`num${amount}` as unknown) as CellType);
     return amount;
+  }
+
+  private placeBombs(excludedCell: CellSprite) {
+    const excludedPos = excludedCell.tilePos();
+    for (let i = 0; i < BOMBS_AMOUNT; i ++) {
+      const x = Math.floor(Math.random() * MAP_WIDTH);
+      const y = Math.floor(Math.random() * MAP_HEIGHT);
+      const cell = this._map[y][x];
+      if (cell.hasBomb() || isEqual(cell.tilePos(), excludedPos)) {
+        let processedCell = cell;
+        while (true) {
+          const { x: tileX, y: tileY } = processedCell.tilePos();
+          const id = (tileY * MAP_WIDTH) + tileX + BOMB_PLACEMENT_STEP;
+          const newX = id % MAP_WIDTH;
+          const newY = Math.floor(id / MAP_HEIGHT) % MAP_HEIGHT;
+          processedCell = this._map[newY][newX];
+          if (!processedCell.hasBomb()) {
+            processedCell.hasBomb(true);
+            break;
+          }
+        }
+      } else {
+        cell.hasBomb(true);
+      }
+    }
+    window.console.log(`Map: ${MAP_WIDTH}x${MAP_HEIGHT}`);
+    for (const row of this._map) {
+      window.console.log(...row.map(c => c.hasBomb() ? '💣' : '∅'));
+    }
   }
 }
