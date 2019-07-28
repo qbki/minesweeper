@@ -1,4 +1,6 @@
-# Description
+# Minesweeper
+
+## Description
 
 > The objective of the game is to clear a rectangular board containing hidden
 > "mines" or bombs without detonating any of them, with help from clues about the
@@ -6,7 +8,7 @@
 
 [Link to Wikipedia](https://en.wikipedia.org/wiki/Minesweeper_(video_game))
 
-# Manual
+## Manual
 
 `Left mouse button click on cell` opens it
 
@@ -18,7 +20,7 @@
 equal to the number (it doesn't work if the number in the cell is less
 then the quantity of the nearest cells)
 
-# Supported Browsers
+## Supported Browsers
 
 In general I support the latest two versions of major browsers like
 Chrome, Firefox, Edge and Safari. But this game can work with older
