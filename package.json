@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "main": "src/index.js",
   "scripts": {
-    "build": "rm -rf ./dist && webpack --config webpack.config.js",
-    "start": "webpack-dev-server --hot --inline --host 0.0.0.0"
+    "build": "rm -rf ./dist && webpack -p",
+    "start": "webpack-dev-server -d --hot --inline --host 0.0.0.0"
   },
   "browserslist": [
     "last 2 version",

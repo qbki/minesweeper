@@ -40,11 +40,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts']
   },
-  devtool: 'inline-source-map',
   devServer: {
     contentBase: root('assets'),
   },
-  mode: 'development',
   plugins: [
     new CopyWebpackPlugin([
       { from: 'src/index.html', to: 'index.html', toType: 'file' },
