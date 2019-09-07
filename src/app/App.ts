@@ -38,12 +38,6 @@ export default class App {
     this._map = [[]];
   }
 
-  public run() {
-    this._app.ticker.add(delta => {
-      noop();
-    });
-  }
-
   private onLoadResources = (_: unknown, res: {[key: string]: { texture: Texture }}) => {
     const game = new GameScreen(res.spritesheet.texture);
     const title = new TitleScreen();
