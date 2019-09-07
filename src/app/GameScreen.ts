@@ -203,7 +203,7 @@ export default class MenuScreen extends Container {
         const cell = this._map[y][x];
         if (cell.hasBomb()) {
           if (
-            cell.isNot(CellType.detonatedBomb) ||
+            cell.isNot(CellType.detonatedBomb) &&
             cell.isNot(CellType.flag)
           ) {
             cell.type(CellType.bomb);
