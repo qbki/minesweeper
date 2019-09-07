@@ -25,4 +25,6 @@ export const TEXT_STYLE = {
   dropShadowBlur: 4,
   dropShadowAngle: Math.PI / 6,
   dropShadowDistance: 3,
+  lineJoin: 'round',
+  padding: 8,
 };
