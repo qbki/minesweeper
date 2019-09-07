@@ -3,7 +3,6 @@ import {
   Texture,
   TilingSprite,
 } from 'pixi.js-legacy';
-import noop from 'lodash/noop';
 
 import {
   TEXTURE_TILE_HEIGHT,

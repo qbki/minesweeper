@@ -6,6 +6,7 @@ export const TEXTURE_TILE_HEIGHT = 128;
 export const MAP_WIDTH = 20;
 export const MAP_HEIGHT = 10;
 export const BOMB_PLACEMENT_STEP = 7; // It must divide MAP_WIDTH * MAP_HEIGHT with reminder
+export const MIN_EXLUDED_DISTANCE = 3;
 export const TILE_WIDTH = 32;
 export const TILE_HEIGHT = 32;
 export const GAME_FIELD_WIDTH = TILE_WIDTH * MAP_WIDTH;

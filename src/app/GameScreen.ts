@@ -8,7 +8,7 @@ import {
   Texture,
   TilingSprite,
 } from 'pixi.js-legacy';
-import noop from 'lodash/noop';
+import { distance } from './utils';
 
 import CellSprite, { CellType } from './CellSprite';
 import Button from './Button';
@@ -19,6 +19,7 @@ import {
   GAME_FIELD_WIDTH,
   MAP_HEIGHT,
   MAP_WIDTH,
+  MIN_EXLUDED_DISTANCE,
   SCENE_WIDTH,
   TEXT_STYLE,
   TILE_OFFSET_X,
@@ -202,11 +203,9 @@ export default class MenuScreen extends Container {
         const cell = this._map[y][x];
         if (cell.hasBomb()) {
           if (
-            cell.is(CellType.detonatedBomb) ||
-            cell.is(CellType.flag)
+            cell.isNot(CellType.detonatedBomb) ||
+            cell.isNot(CellType.flag)
           ) {
-            noop();
-          } else {
             cell.type(CellType.bomb);
           }
         } else {
@@ -309,15 +308,12 @@ export default class MenuScreen extends Container {
 
   private placeBombs(excludedCell: CellSprite) {
     const excludedPos = excludedCell.tilePos();
-    for (let i = 0; i < BOMBS_AMOUNT; i ++) {
+    for (let i = 0; i < BOMBS_AMOUNT; i++) {
       const x = Math.floor(Math.random() * MAP_WIDTH);
       const y = Math.floor(Math.random() * MAP_HEIGHT);
       const cell = this._map[y][x];
       const cellTilePos = cell.tilePos();
-      if (
-        cell.hasBomb() ||
-        (cellTilePos.x === excludedPos.x && cellTilePos.y === excludedPos.y)
-      ) {
+      if (cell.hasBomb() || distance(cellTilePos, excludedPos) < MIN_EXLUDED_DISTANCE) {
         let processedCell = cell;
         while (true) {
           const { x: tileX, y: tileY } = processedCell.tilePos();
@@ -325,7 +321,7 @@ export default class MenuScreen extends Container {
           const newX = id % MAP_WIDTH;
           const newY = Math.floor(id / MAP_HEIGHT) % MAP_HEIGHT;
           processedCell = this._map[newY][newX];
-          if (!processedCell.hasBomb()) {
+          if (!processedCell.hasBomb() && distance(processedCell.tilePos(), excludedPos) >= MIN_EXLUDED_DISTANCE) {
             processedCell.hasBomb(true);
             break;
           }

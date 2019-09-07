@@ -6,8 +6,6 @@ import {
   Texture,
   TilingSprite,
 } from 'pixi.js-legacy';
-import noop from 'lodash/noop';
-import isEqual from 'lodash/isEqual';
 
 import CellSprite, { CellType } from './CellSprite';
 import GameScreen from './GameScreen';
